@@ -1,4 +1,4 @@
-# gdcli
+# gdcli.py
 
 Yet Another Google Drive CLI client
 
