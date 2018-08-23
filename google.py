@@ -2,9 +2,7 @@
 
 import os
 import re
-import time
 import sys
-import json
 import httplib2
 import apiclient
 import traceback
