@@ -231,6 +231,7 @@ class Google(object):
     def listFiles(self,args):
         parent = args.get('parent',None)
         matching = args.get('match',None)
+        show_trash = args.get('show_trash',False)
 
         rv = {}
         done = False
@@ -238,7 +239,7 @@ class Google(object):
         while not done:
             list_args = {
                 'pageSize': 100,
-                'fields': 'nextPageToken, files(id,name,mimeType,modifiedTime,size)',
+                'fields': 'nextPageToken, files(id,name,mimeType,modifiedTime,size,trashed)',
             }
             qs = [] 
             if parent:
@@ -248,6 +249,9 @@ class Google(object):
 
             if matching:
                 qs.append("name contains '" + matching + "'")
+
+            if not show_trash:
+                qs.append("trashed != true")
 
             list_args['q'] = ' and '.join([ '(' + q + ')' for q in qs])
             addTeamDriveKeys(list_args, args, True)
@@ -288,7 +292,7 @@ class Google(object):
         if not fileId:
             return {'error': 'missing fileId'}
         if not user:
-            return {'error': 'missing user assignmet'}
+            return {'error': 'missing user assignment'}
 
  
         perm_args = {
@@ -313,6 +317,73 @@ class Google(object):
         except Exception as e:
             return { 'error': 'Permissions add failed', 'exception': repr(e) }
 
+        return res
+
+    def addParent(self,args):
+        fileId = args.get('fileId',None)
+        parent = args.get('parent',None)
+        if not fileId:
+            return { 'error': 'No file ID provided'}
+        if not parent:
+            return { 'error': 'No parent to provided to add.'}
+
+        addp_args = {
+            'fileId': fileId,
+            'addParents': parent,
+        }
+        addTeamDriveKeys(addp_args, args, False)
+        try:
+            d = self.get_drive()['v3']
+            req = d.files().update(**addp_args)
+            res = req.execute()
+        except Exception as e:
+            return { 'error': 'addParent failed', 'exception': repr(e) }
+
+        return res
+
+
+    def rmParent(self,args):
+        fileId = args.get('fileId',None)
+        parent = args.get('parent',None)
+        if not fileId:
+            return { 'error': 'No file ID provided'}
+        if not parent:
+            return { 'error': 'No parent to provided to remove.'}
+
+        rmp_args = {
+            'fileId': fileId,
+            'removeParents': parent,
+        }
+        addTeamDriveKeys(rmp_args, args, False)
+        try:
+            d = self.get_drive()['v3']
+            req = d.files().update(**rmp_args)
+            res = req.execute()
+        except Exception as e:
+            return { 'error': 'rmParent failed', 'exception': repr(e) }
+        return res
+
+    def renameFile(self,args):
+        parent = args.get('parent',None)
+        fileId = args.get('fileId',None)
+        newname = args.get('name',None)
+        if not fileId:
+            return { 'error': 'No file ID provided'}
+        if not newname:
+            return { 'error': 'No new name provided' }
+
+
+        ren_args = {
+            'fileId': fileId,
+            'body': {
+                'name': newname,
+            }
+        }
+        addTeamDriveKeys(ren_args, args, False)
+
+        d = self.get_drive()['v3']
+        req = d.files().update(**ren_args)
+        res = req.execute()
         return res
 
     def createFolder(self,args):

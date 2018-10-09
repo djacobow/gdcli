@@ -37,6 +37,10 @@ config = {
         'info':     'info',
         'share':    'share',
         'help':     'help',
+        'rename':   'rename',
+        'addparent':'addp',
+        'delparent':'rmp',
+        'rmparent': 'tmp',
     },
 }
 
@@ -148,6 +152,8 @@ Examples:
     gdcli share <fileId> <user_email>
     gdcli share <fileId> <user_email> --readonly
 
+    gdcli rename <fileId> <newname>
+
     gdcli info  <fileId>
     '''
 
@@ -203,7 +209,7 @@ Examples:
 About: 
 
     Author  : Dave Jacobowitz (dgj@lbl.gov)
-    Version : 0.0.1 23.Aug.2018
+    Version : 0.0.2 9.Oct.2018
 
     '''
 
@@ -223,6 +229,28 @@ def doUnlink(g,args):
 
     return g.deleteFile(args)
 
+def doRename(g,args):
+    if not setCheckFileId(args):
+        return { 'error': 'missing fileId' }
+    if not args.get('name',None):
+        assignFromNaked(args,1,'name')
+
+    return g.renameFile(args)
+
+def doAddParent(g,args):
+    if not setCheckFileId(args):
+        return { 'error': 'missing fileId' }
+    if not args.get('parent',None):
+        assignFromNaked(args,1,'parent')
+    return g.addParent(args)
+
+def doRemoveParent (g,args):
+    if not setCheckFileId(args):
+        return { 'error': 'missing fileId' }
+    if not args.get('parent',None):
+        assignFromNaked(args,1,'parent')
+    return g.rmParent(args)
+
 def doShare(g,args):
     if not setCheckFileId(args):
         return { 'error': 'missing fileId' }
@@ -230,8 +258,6 @@ def doShare(g,args):
         return { 'error': 'missing user to share' }
 
     return g.createPermissions(args)
-
-
 
 def doMkdir(g,args):
     if not assignFromNaked(args,0,'name'):
@@ -301,7 +327,7 @@ def doList(g, args):
         print('\nFile List:\n')
 
         formats = [
-            '{:5} : "{}" {}',
+            '{:5} : "{}" {} {}',
             '      : {} {} {}',
             '-------------------------------------------------------------',
         ]
@@ -313,6 +339,7 @@ def doList(g, args):
                   count,
                   l[f].get('name',''),
                   mTypeToStr(l[f].get('mimeType','')),
+                  'trashed' if l[f].get('trashed',False) else ''
                 ],
                 [ 
 
@@ -346,6 +373,9 @@ config['commands'] = {
     'unlink':   doUnlink,
     'mkdir':    doMkdir,
     'share':    doShare,
+    'rename':   doRename,
+    'addp':     doAddParent,
+    'rmp':      doRemoveParent,
 }
 
 if __name__ == '__main__':
