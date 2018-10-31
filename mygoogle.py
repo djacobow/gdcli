@@ -245,6 +245,7 @@ class Google(object):
             if parent:
                 qs.append("'" + parent + "' in parents")
             elif args.get('teamDriveId',None):
+                qs.append("'" + args['teamDriveId'] + "' in parents")
                 pass
             else:
                 qs.append("'root' in parents")
