@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Drive Tree View (beta!)</title>
+    <meta charset="utf-8" />
+    <!-- This client id will only work when hosted from skunkworks.lbl.gov. You'll need 
+         your own client id to host a similar tool on your site. -->
+    <meta name="google-signin-scope" content="https://www.googleapis.com/auth/drive.metadata.readonly">
+    <meta name="google-signin-client_id" content="213424301667-rr3donvl0214fshlfnp82l4ltgatv426.apps.googleusercontent.com">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <span style="font-weight: bold; font-size:200%;">Berkeley Lab Drive Tree View (beta!)</span><br>
+    <div>This tool generates a flattened list of all files in a Google Drive or Google Drive folder.</div>
+
+    <div id="authdiv">
+        <h4>Sign-in</h4>
+        <p>This tool needs authorization to run. Please sign in:</p>
+        <div class="g-signin2" data-onsuccess="onSignIn" data-onfailure="onSignOnFail"></div>
+        <br>
+        <button id="signout_button" style="display: none;">Sign Out</button>
+        </p>
+    </div>
+
+
+    <div id="setupdiv">
+        <h4>Setup</h4>
+        <p>Leave Enclosing folderId empty if you want to scan an entire Google Drive from its root. Leave TeamDriveId empty to scan a regular Google Drive, otherwise, include it to scan a Team Drive.</p>
+        <table>
+            <tr>
+                <th>Enclosing folder fileId:</th>
+                <td><input type="text" id="parent" size="40"></input></td>
+                <td class="note">this is the folderId<sup>*</sup> (not the name) of the folder you want to search, or blank to search from the root of your Google Drive.</td>
+            </tr>
+            <tr>
+                <th>teamDriveId: </th>
+                <td><input type="text" id="teamdriveid" size="40"></input></td>
+                <td class="note">If you want to scan a Team Drive, paste the teamDriveId<sup>*</sup> here.</td>
+            </tr>
+            <tr>
+                <th>Max scan depth</th>
+                <td>
+                    <select id="maxdepth">
+                        <option value="10000">full</option>
+                        <option value="15">15</option>
+                        <option value="14">14</option>
+                        <option value="13">13</option>
+                        <option value="12">12</option>
+                        <option value="11">11</option>
+                        <option value="10">10</option>
+                        <option value="9">9</option>
+                        <option value="8">8</option>
+                        <option value="7">7</option>
+                        <option value="6">6</option>
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <input type="button" id="run" value="Scan Now!"></input>
+                    <input type="button" id="clear" value="clear cache"></input>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" class="note">
+                    <p><sup>*</sup><em>What are folderId and teamDriveIds?</em></p>
+                    <p>These are the strings of gobbledybook you find in the URLs of 
+                    Google Drive when you're looking at folders in a browser. For example:
+                    you might have a folder with an url that looks like:
+                    <span class="mono">https://drive.google.com/drive/u/1/folders/0B9RAyk2-oKosNW42RWVWUWJRNEU?ogsrc=32</span>. The folderId is <span class="mono">0B9RAyk2-oKosNW42RWVWUWJRNEU</span>.
+                   Similarly, if you are at the root of a Team Drive, the url might look like: 
+                   <span class="mono">https://drive.google.com/drive/u/0/folders/0AIZ1CYpjSSUSUk9PVV?ogsrc=32</span>. The teamDriveId would be <span class="mono">0AIZ1CYpjSSUSUk9PVV</span>
+
+                    
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="rundiv">
+        <h4>Progress</h4>
+        <table id="progtable">
+            <tr>
+                <td>Currently Scanning:</td>
+                <td id="currently_scanning"></td>
+            </tr>
+            <tr>
+                <td>Scanned:</td>
+                <td>Folders:<span id="folders_scanned">0</span> Files:<span id="total_files">0</span></td>
+            </tr>
+            <tr>
+                <td>Errors:</td>
+                <td id="errors"></td>
+            </tr>
+            <tr>
+                <td>Warnings:</td>
+                <td id="warnings"></td>
+            </tr>
+        </table>
+    </div>
+    <div id="results">
+        <h4>Results</h4>
+    </div>
+
+
+    <script type="text/javascript" src="helpers.js"></script>
+    <script type="text/javascript" src="cache.js"></script>
+    <script type="text/javascript" src="proginfo.js"></script>
+    <script type="text/javascript" src="exporter.js"></script>
+    <script type="text/javascript" src="filelister.js"></script>
+    <script type="text/javascript" src="folderrecurser.js"></script>
+    <script type="text/javascript" src="tree.js"></script>
+    <script src="https://apis.google.com/js/platform.js"></script>
+  <div id="footer">
+      <table width="100%">
+          <tr>
+              <td>Brought to you by Berkeley Lab IT Skunkworks.</td>
+              <td style="text-align: right"><a href="mailto:help@lbl.gov">Contact us</a> for help!</td>
+          </tr>
+      </table>
+  </div>
+  </body>
+</html>

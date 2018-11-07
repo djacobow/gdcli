@@ -1,0 +1,64 @@
+
+
+body {
+    background-color: #f0f0f0;
+    color: rgb(0,52,77);
+    font-family: Verdana, Arial, sans-serif;
+}
+
+td, th {
+    text-align: left;
+    vertical-align: top;
+}
+
+div#authdiv {
+    background-color: #e0f0f0;
+}
+div#setupdiv {
+    display: none;
+    background-color: #e0e0f0;
+}
+div#rundiv {
+    display: none;
+    background-color: #e0f0e0;
+}
+div#results {
+    display:none;
+    background-color: #e0e0e0;
+}
+
+table#result_table tr:nth-child(even) {
+    background-color: #d0d0d0;
+}
+table#result_table tr:nth-child(odd) {
+    background-color: #e0e0e0;
+}
+
+button#save_button {
+    font-size: 125%;
+    color: black;
+    background-color: #d0ffd0;
+}
+
+input#run {
+    font-size: 200%;
+    color: black;
+    background-color: #d0ffd0;
+}
+
+div#footer {
+    background-color: #e0e0f0;
+    font-size: 70%;
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+}
+
+.note {
+    font-size: 70%;
+}
+.mono {
+    color: #000090;
+    font-family: courier, monospace;
+}
