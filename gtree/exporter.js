@@ -10,10 +10,23 @@ Exporter.prototype.init = function(data, target) {
                  this.config.button.classname || 'export_button',
                  this.config.button.label || 'Export Data');
     btn.id = this.config.button.id || 'export_button';
+    var info = cr('div')
+    this.infodiv = info;
     btn.addEventListener('click',(ev) => {
-        this.download();
+        btn.disabled = true;
+        btn.innerText = 'Please wait';
+        info.innerText = 'working...';
+        try {
+            this.download();
+        } catch (ex) {
+            this.infodiv.innerText += ex.toString();
+        }
+        info.innerText += 'done.'
+        btn.disabled = false;
+        btn.innerText = this.config.button.label || 'Export Data';
     });
     target.appendChild(btn);
+    target.appendChild(info)
 };
 
 Exporter.prototype.date = function() {
